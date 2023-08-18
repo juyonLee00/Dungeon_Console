@@ -33,83 +33,109 @@ namespace DungeonConsole
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
             int input = CheckValidInput(1, 2);
-            switch(input)
+            switch (input)
             {
                 case 1:
                     DisplayMyInfo();
                     break;
             }
-        }
 
-        static void DisplayMyInfo()
-        {
-            Console.Clear();
-
-            Console.WriteLine("상태보기");
-            Console.WriteLine("캐릭터의 정보를 표시합니다.");
-            Console.WriteLine();
-            Console.WriteLine($"Lv.{player.Level}");
-            Console.WriteLine($"{player.Name}({player.Job})");
-            Console.WriteLine($"공격력 :{player.Atk}");
-            Console.WriteLine($"방어력 : {player.Def}");
-            Console.WriteLine($"체력 : {player.Hp}");
-            Console.WriteLine($"Gold : {player.Gold} G");
-            Console.WriteLine();
-            Console.WriteLine("0. 나가기");
-
-            int input = CheckValidInput(0, 0);
-            switch (input)
+            static void DisplayMyInfo()
             {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-            }
-        }
+                Console.Clear();
 
-        static void DisplayInventory()
-        {
-            
+                Console.WriteLine("상태보기");
+                Console.WriteLine("캐릭터의 정보를 표시합니다.");
+                Console.WriteLine();
+                Console.WriteLine($"Lv.{player.Level}");
+                Console.WriteLine($"{player.Name}({player.Job})");
+                Console.WriteLine($"공격력 :{player.Atk}");
+                Console.WriteLine($"방어력 : {player.Def}");
+                Console.WriteLine($"체력 : {player.Hp}");
+                Console.WriteLine($"Gold : {player.Gold} G");
+                Console.WriteLine();
+                Console.WriteLine("0. 나가기");
 
-        }
-
-        static int CheckValidInput(int min, int max)
-        {
-            while(true)
-            {
-                string input = Console.ReadLine();
-
-                bool parseSuccess = int.TryParse(input, out var ret);
-
-                if(parseSuccess)
+                int input = CheckValidInput(0, 0);
+                switch (input)
                 {
-                    if (ret >= min && ret <= max)
-                        return ret;
+                    case 0:
+                        DisplayGameIntro();
+                        break;
                 }
+            }
 
-                Console.WriteLine("잘못된 입력입니다.");
+            static void DisplayInventory()
+            {
+
+
+            }
+
+            static int CheckValidInput(int min, int max)
+            {
+                while (true)
+                {
+                    string input = Console.ReadLine();
+
+                    bool parseSuccess = int.TryParse(input, out var ret);
+
+                    if (parseSuccess)
+                    {
+                        if (ret >= min && ret <= max)
+                            return ret;
+                    }
+
+                    Console.WriteLine("잘못된 입력입니다.");
+                }
             }
         }
-    }
-
-    public class Character
-    {
-        public string Name { get; }
-        public string Job { get; }
-        public int Level { get; }
-        public int Atk { get; }
-        public int Def { get; }
-        public int Hp { get; }
-        public int Gold { get; }
-
-        public Character(string name, string job, int level, int atk, int def, int hp, int gold)
+        public class Item
         {
-            Name = name;
-            Job = job;
-            Level = level;
-            Atk = atk;
-            Def = def;
-            Hp = hp;
-            Gold = gold;
+            public string Name;
+            public bool isEquip;
+            public char type;
+            public int typeEffect;
+            public string content;
+
+            //해당 isEquip이 null일 경우 장비 장착 및 효과 반.
+            public void EquipItem(int typeEffect, char type)
+            {
+                switch(type)
+                {
+                    case 'a':
+                        player.Atk += typeEffect;
+                        break;
+                    case 'd':
+                        player.Def += typeEffect;
+                        break;
+                }
+            }
+
+        }
+
+
+
+
+        public class Character
+        {
+            public string Name { get; }
+            public string Job { get; }
+            public int Level { get; }
+            public int Atk { get; }
+            public int Def { get; }
+            public int Hp { get; }
+            public int Gold { get; }
+
+            public Character(string name, string job, int level, int atk, int def, int hp, int gold)
+            {
+                Name = name;
+                Job = job;
+                Level = level;
+                Atk = atk;
+                Def = def;
+                Hp = hp;
+                Gold = gold;
+            }
         }
     }
 }
