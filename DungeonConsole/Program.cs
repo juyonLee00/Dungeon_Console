@@ -22,10 +22,15 @@ namespace DungeonConsole
 
         static void DisplayGameIntro()
         {
+            
+        }
+
+        static void DisplayMyInfo()
+        {
             Console.Clear();
 
             Console.WriteLine("상태보기");
-            Console.WriteLine("캐릭터의 정보 표시합니다.");
+            Console.WriteLine("캐릭터의 정보를 표시합니다.");
             Console.WriteLine();
             Console.WriteLine($"Lv.{player.Level}");
             Console.WriteLine($"{player.Name}({player.Job})");
@@ -45,13 +50,9 @@ namespace DungeonConsole
             }
         }
 
-        static void DisplayMyInfo()
-        {
-
-        }
-
         static void DisplayInventory()
         {
+            
 
         }
 
