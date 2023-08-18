@@ -22,7 +22,23 @@ namespace DungeonConsole
 
         static void DisplayGameIntro()
         {
-            
+            Console.Clear();
+
+            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
+            Console.WriteLine("이곳에서 전전으로 들어가기 전 활동을 할 수 있습니다.");
+            Console.WriteLine();
+            Console.WriteLine("1. 상태보기");
+            Console.WriteLine("2. 인벤토리");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+            int input = CheckValidInput(1, 2);
+            switch(input)
+            {
+                case 1:
+                    DisplayMyInfo();
+                    break;
+            }
         }
 
         static void DisplayMyInfo()
