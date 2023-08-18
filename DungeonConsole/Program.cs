@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DungeonConsole
 {
     class MainClass
     {
         private static Character player;
+        private static List<Item> itemList = new List<Item>();
 
         public static void Main(string[] args)
         {
@@ -18,6 +20,9 @@ namespace DungeonConsole
             player = new Character("Chad", "전사", 1, 10, 5, 100, 1500);
 
             //item info setting
+            itemList.Add(new Item("무쇠갑옷", false, 'd', 5, "무쇠로 만들어져 튼튼한 갑옷입니다."));
+            itemList.Add(new Item("낡은 검", false, 'a', 2, "쉽게 볼 수 있는 낡은 검입니다."));
+            
         }
 
         static void DisplayGameIntro()
@@ -68,7 +73,6 @@ namespace DungeonConsole
             static void DisplayInventory()
             {
 
-
             }
 
             static int CheckValidInput(int min, int max)
@@ -89,16 +93,26 @@ namespace DungeonConsole
                 }
             }
         }
+
         public class Item
         {
-            public string Name;
-            public bool isEquip;
-            public char type;
-            public int typeEffect;
-            public string content;
+            public string Name { get; }
+            public bool IsEquip { get; } //기본 false로 설정 .
+            public char Type { get; }
+            public int TypeEffect { get; }
+            public string Content { get; }
 
-            //해당 isEquip이 null일 경우 장비 장착 및 효과 반.
-            public void EquipItem(int typeEffect, char type)
+            public Item(string name, bool isEquip, char type, int typeEffect, string content)
+            {
+                Name = name;
+                IsEquip = isEquip;
+                Type = Type;
+                TypeEffect = TypeEffect;
+                Content = content;
+            }
+
+            //해당 isEquip이 null일 경우 장비 장착 및 효과 반영 .
+            public void EquipItem(Character player, int typeEffect, char type)
             {
                 switch(type)
                 {
@@ -114,7 +128,12 @@ namespace DungeonConsole
         }
 
 
-
+        /*
+        public class ItemList
+        {
+            private List<Item> items;
+        }
+        */
 
         public class Character
         {
