@@ -126,13 +126,9 @@ namespace DungeonConsole
         static string ShowDifferenceAtkResult()
         {
             string result = "";
-
-            if (isEquipEvent && changeAtk)
+            int abstractAtk = player.Atk - firstPlayerAtk;
+            if (abstractAtk != 0)
             {
-
-                isEquipEvent = false;
-                changeAtk = true;
-                int abstractAtk = player.Atk - firstPlayerAtk;
                 if (abstractAtk > 0)
                     result = " (+" + abstractAtk.ToString() + ")";
                 else
@@ -146,13 +142,9 @@ namespace DungeonConsole
         static string ShowDifferenceDefResult()
         {
             string result = "";
-
-            if (isEquipEvent && changeDef)
-            {
-                isEquipEvent = false;
-                changeDef = false;
-                int abstractDef = player.Def - firstPlayerDef;
-
+            int abstractDef = player.Def - firstPlayerDef;
+            if (abstractDef != 0)
+            { 
                 if (abstractDef > 0)
                     result = " (+" + abstractDef.ToString() + ")";
                 else
@@ -162,7 +154,6 @@ namespace DungeonConsole
             return result;
         }
 
-                //장치 관리 창
         static void ManageEquipItem()
         {
             Console.WriteLine("[아이템 목록]");
@@ -194,18 +185,15 @@ namespace DungeonConsole
             //장착하지 않은 아이템을 장착할 경우 
             if (!itemList[input - 1].IsEquip)
             {
-                isEquipEvent = true;
                 itemList[input - 1].IsEquip = true;
                 itemList[input - 1].Name.Replace("[E]", "");
                 switch (itemList[input - 1].Type)
                 {
                     case 'a':
                         player.Atk += itemList[input - 1].TypeEffect;
-                        changeAtk = true;
                         break;
                     case 'd':
                         player.Def += itemList[input - 1].TypeEffect;
-                        changeDef = true;
                         break;
                  }
 
@@ -213,18 +201,15 @@ namespace DungeonConsole
             //장착한 아이템을 장착하지 않을 경우 
             else
             {
-                isEquipEvent = false;
                 itemList[input - 1].IsEquip = false;
                 itemList[input - 1].Name.Replace("[E]", "");
                 switch (itemList[input - 1].Type)
                 {
                     case 'a':
                         player.Atk -= itemList[input - 1].TypeEffect;
-                        changeAtk = true;
                         break;
                     case 'd':
                         player.Def -= itemList[input - 1].TypeEffect;
-                        changeDef = true;
                         break;
                  }
 
