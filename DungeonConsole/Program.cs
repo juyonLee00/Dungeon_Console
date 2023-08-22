@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DungeonConsole
 {
@@ -93,6 +94,8 @@ namespace DungeonConsole
 
             Console.WriteLine("[아이템 목록]");
 
+            itemList = itemList.OrderByDescending(item => item.Name.Length).ToList();
+
             for (int i = 0; i < itemList.Count; i++)
             {
                 string itemName = itemList[i].Name;
@@ -113,9 +116,12 @@ namespace DungeonConsole
 
                 Console.WriteLine($"- {itemName}  {itemType}  +{itemList[i].TypeEffect}  {itemList[i].Content}");
             }
-            Console.WriteLine("1. 장착 관리");
+
             Console.WriteLine("0. 나가기");
-            int input = CheckValidInput(0, 1);
+            Console.WriteLine("1. 장착 관리");
+
+
+            int input = CheckValidInput(0, 2);
             switch (input)
             {
                 case 0:
@@ -162,7 +168,6 @@ namespace DungeonConsole
         static void ManageEquipItem()
         {
             Console.WriteLine("[아이템 목록]");
-
             for (int i = 0; i < itemList.Count; i++)
             {
                 string itemName = itemList[i].Name;
@@ -262,15 +267,7 @@ namespace DungeonConsole
 
         }
 
-
-        /*
-        public class ItemList
-        {
-            private List<Item> items;
-        }
-        */
-
-        public class Character
+    public class Character
         {
             public string Name { get; }
             public string Job { get; }
