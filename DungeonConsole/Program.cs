@@ -194,6 +194,9 @@ namespace DungeonConsole
 
             for (int i = 0; i < itemList.Count; i++)
             {
+                if (itemList[i].IsSoldOut == false)
+                    continue;
+
                 Console.Write("- ");
                 string itemName = itemList[i].Name;
                 string itemType = "";
@@ -229,11 +232,20 @@ namespace DungeonConsole
                 {
                     blanks += " ";
                 }
-                Console.Write("|" + itemEffect + blanks + $"|{itemList[i].Content}");
+                Console.Write("|" + itemEffect + blanks);
+
+                blanks = "";
+                blankNum = 30 - itemList[i].Content.Length;
+
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write($"| {itemList[i].Content}" + blanks);
                 Console.WriteLine();
 
             }
-
+            Console.WriteLine();
             Console.WriteLine("0. 나가기");
             Console.WriteLine("1. 장착 관리");
 
