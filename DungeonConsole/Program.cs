@@ -81,7 +81,7 @@ namespace DungeonConsole
 
             Console.WriteLine("[아이템 목록]");
 
-            
+
             for (int i = 0; i < itemList.Count; i++)
             {
                 Console.Write("- ");
@@ -130,7 +130,7 @@ namespace DungeonConsole
                 }
                 Console.Write($"| {itemList[i].Content}" + blanks + " | ");
 
-                if(itemList[i].IsSoldOut)
+                if (itemList[i].IsSoldOut)
                 {
                     Console.Write("구매완료");
                 }
@@ -231,25 +231,25 @@ namespace DungeonConsole
 
             }
 
-                Console.WriteLine();
-                Console.WriteLine("0. 나가기");
-                Console.WriteLine();
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
+            Console.WriteLine();
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
 
 
-                int input = CheckValidInput(0, 7);
+            int input = CheckValidInput(0, 7);
 
-                switch (input)
-                {
-                    case 0:
-                        DisplayGameIntro();
-                        break;
-                    default:
-                        IsPurchasedItem(input - 1);
-                        break;
-                }
-
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                default:
+                    IsPurchasedItem(input - 1);
+                    break;
             }
+
+        }
 
 
 
@@ -273,27 +273,27 @@ namespace DungeonConsole
                 }
             }
 
-                Console.WriteLine();
-                Console.WriteLine("1. 상점으로 돌아가기");
-                Console.WriteLine("0. 나가기");
-                Console.WriteLine();
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
+            Console.WriteLine();
+            Console.WriteLine("1. 상점으로 돌아가기");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
 
 
             int input = CheckValidInput(0, 1);
 
-                switch (input)
-                {
-                    case 0:
-                        DisplayGameIntro();
-                        break;
-                    case 1:
-                        DisplayMarket();
-                        break;
-                }
-
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                case 1:
+                    DisplayMarket();
+                    break;
             }
-        
+
+        }
+
 
         static void DisplayMyInfo()
         {
@@ -331,7 +331,7 @@ namespace DungeonConsole
 
             for (int i = 0; i < itemList.Count; i++)
             {
-                if (itemList[i].IsSoldOut == false)
+                if (!itemList[i].IsSoldOut)
                     continue;
 
                 Console.Write("- ");
@@ -398,6 +398,7 @@ namespace DungeonConsole
                     break;
             }
         }
+    
 
         //아이템 장착 여부에 따른 playerDisplay창 변경
         static string ShowDifferenceAtkResult()
@@ -437,6 +438,8 @@ namespace DungeonConsole
 
             for (int i = 0; i < itemList.Count; i++)
             {
+                if (!itemList[i].IsSoldOut)
+                    continue;
                 Console.Write("- " + (i + 1) + " ");
                 string itemName = itemList[i].Name;
                 string itemType = "";
