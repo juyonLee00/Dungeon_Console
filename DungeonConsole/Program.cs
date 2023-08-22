@@ -8,6 +8,7 @@ namespace DungeonConsole
     {
         private static Character player;
         private static List<Item> itemList = new List<Item>();
+
         static bool isEquipEvent = false;
         static int firstPlayerAtk;
         static int firstPlayerDef;
@@ -28,10 +29,13 @@ namespace DungeonConsole
             firstPlayerDef = player.Def;
 
             //item info setting
-            itemList.Add(new Item("무쇠갑옷", false, 'd', 5, "무쇠로 만들어져 튼튼한 갑옷입니다."));
-            itemList.Add(new Item("낡은 검", false, 'a', 2, "쉽게 볼 수 있는 낡은 검입니다."));
-            itemList.Add(new Item("나무 몽둥이", false, 'a', 3, "주위에서 많이 보이는 몽둥이입니다."));
-
+            itemList.Add(new Item("무쇠갑옷", false, 'd', 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 500, true));
+            itemList.Add(new Item("낡은 검", false, 'a', 2, "쉽게 볼 수 있는 낡은 검입니다.", 600, false));
+            itemList.Add(new Item("나무 몽둥이", false, 'a', 3, "주위에서 많이 보이는 몽둥이입니다.", 100, true));
+            itemList.Add(new Item("스파르타의 갑옷", false, 'd', 15, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 3500, false));
+            itemList.Add(new Item("수련자 갑옷", false, 'd', 5, "수련에 도움을 주는 갑옷입니다.", 1000, false));
+            itemList.Add(new Item("청동 도끼", false, 'a', 5, "어디선가 사용됐던거 같은 도끼입니다.", 1500, false));
+            itemList.Add(new Item("스파르타의 창", false, 'a', 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", 3000, false));
         }
 
         static void DisplayGameIntro()
@@ -47,10 +51,13 @@ namespace DungeonConsole
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("2. 인벤토리");
             Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("3. 상점");
+            Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-            int input = CheckValidInput(1, 2);
+            int input = CheckValidInput(1, 3);
             switch (input)
             {
                 case 1:
@@ -58,6 +65,95 @@ namespace DungeonConsole
                     break;
                 case 2:
                     DisplayInventory();
+                    break;
+                case 3:
+                    DisplayMarket();
+                    break;
+            }
+        }
+
+        static void DisplayMarket()
+        {
+            Console.WriteLine("상점");
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
+
+            Console.WriteLine("[아이템 목록]");
+
+            
+            for (int i = 0; i < itemList.Count; i++)
+            {
+                Console.Write("- ");
+                string itemName = itemList[i].Name;
+                string itemType = "";
+                if (itemList[i].IsEquip)
+                {
+                    itemName = "[E]" + itemName;
+                }
+
+                if (itemList[i].Type == 'a')
+                {
+                    itemType = "공격력";
+                }
+                else if (itemList[i].Type == 'd')
+                {
+                    itemType = "방어력";
+                }
+
+                Console.Write($"{itemName}");
+
+                string blanks = "";
+                int blankNum = 0;
+                blankNum = 10 - itemName.Length;
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write(blanks);
+                blanks = "";
+
+                string itemEffect = itemType + " + " + itemList[i].TypeEffect.ToString();
+                blankNum = 10 - itemEffect.Length;
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write("|" + itemEffect + blanks);
+
+                blanks = "";
+                blankNum = 30 - itemList[i].Content.Length;
+
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write($"| {itemList[i].Content}" + blanks + " | ");
+
+                if(itemList[i].IsSoldOut)
+                {
+                    Console.Write("구매완료");
+                }
+                else
+                {
+                    Console.Write($"{itemList[i].Price}");
+                }
+
+                Console.WriteLine();
+
+            }
+
+
+            Console.WriteLine("1. 아이템 구매");
+            Console.WriteLine("0. 나가기");
+
+
+            int input = CheckValidInput(0, 2);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                case 1:
+                    ManageEquipItem();
                     break;
             }
         }
@@ -297,14 +393,18 @@ namespace DungeonConsole
             public char Type { get; }
             public int TypeEffect { get; }
             public string Content { get; }
+            public int Price { get; set; }
+            public bool IsSoldOut { get; set; }
 
-            public Item(string name, bool isEquip, char type, int typeEffect, string content)
+            public Item(string name, bool isEquip, char type, int typeEffect, string content, int price, bool isSoldOut)
             {
                 Name = name;
                 IsEquip = isEquip;
                 Type = type;
                 TypeEffect = typeEffect;
                 Content = content;
+                Price = price;
+                IsSoldOut = isSoldOut;
             }
 
 
