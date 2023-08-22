@@ -72,6 +72,9 @@ namespace DungeonConsole
                 case 3:
                     DisplayMarket();
                     break;
+                case 4:
+                    DisplayDungeon();
+                    break;
             }
         }
 
@@ -95,16 +98,102 @@ namespace DungeonConsole
                     DisplayGameIntro();
                     break;
                 default:
-                    EntryDunGeon(input);
+                    EntryDungeon(input);
                     break;
             }
         }
 
-        static void EntryDunGeon(int input)
+        static void EntryDungeon(int level)
         {
 
+            //권장 방어력보다 낮다면
+            int recommendedDef = 5 + 6 * (level - 1);
+            if (player.Def < recommendedDef)
+            {
+                Random rand = new Random();
+                int playerDGNum = rand.Next(1, 11);
+
+                if(playerDGNum < 5)
+                {
+                    FailDungeon();
+                }
+
+                else
+                {
+                    ClearDungeon(level);
+                }
+            }
+
+            //권장 방어력보다 높거나 같다면
+            else
+            {
+                ClearDungeon(level);
+            }
+
+            Console.WriteLine("\n0. 나가기\n");
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+            int input = CheckValidInput(0, 0);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+            }
         }
 
+
+        static void FailDungeon()
+        {
+            Console.WriteLine("던전 클리어를 실패하셨습니다.");
+            Console.Write("Hp : " + player.Hp);
+
+            player.Hp /= 2;
+
+            Console.Write(" -> " + player.Hp);
+        }
+
+        static void ClearDungeon(int input)
+        {
+            Console.WriteLine("던전 클리어");
+            Console.WriteLine("축하합니다!! \n쉬운 던전을 클리어 하였습니다.\n");
+
+            Console.WriteLine("[탐험 결과]");
+            Console.Write("체력 " + player.Hp);
+
+            int recommendedDef = 5 + 6 * (input - 1);
+            int AbsDef = recommendedDef - player.Def;
+
+            Random rand = new Random();
+            int lossHp = rand.Next(20 + AbsDef, 35 + AbsDef + 1);
+            player.Hp -= lossHp;
+
+            Console.Write(" -> " + player.Hp);
+            Console.WriteLine();
+            Console.Write("Gold " + player.Gold + " G -> ");
+
+            int basicCompensation = 0;
+
+            switch(input)
+            {
+                case 1:
+                    basicCompensation = 1000;
+                    break;
+                case 2:
+                    basicCompensation = 1700;
+                    break;
+                case 3:
+                    basicCompensation = 2500;
+                    break;
+            }
+
+            int extraCompensation = basicCompensation * (rand.Next(player.Atk, player.Atk * 2 + 1));
+            int Compensation = basicCompensation + extraCompensation;
+
+            player.Gold += Compensation;
+
+            Console.Write(player.Gold + " G ");
+        }
 
         static void DisplayMarket()
         {
@@ -663,7 +752,7 @@ namespace DungeonConsole
             public int Level { get; }
             public int Atk { get; set; }
             public int Def { get; set; }
-            public int Hp { get; }
+            public int Hp { get; set; }
             public int Gold { get; set; }
             public bool IsEquipDefItem { get; set; }
             public bool IsEquipAtkItem { get; set; }
