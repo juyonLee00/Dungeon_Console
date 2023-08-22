@@ -57,10 +57,13 @@ namespace DungeonConsole
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("4. 던전");
             Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("5. 휴식");
+            Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-            int input = CheckValidInput(1, 4);
+            int input = CheckValidInput(1, 5);
             switch (input)
             {
                 case 1:
@@ -75,9 +78,59 @@ namespace DungeonConsole
                 case 4:
                     DisplayDungeon();
                     break;
+                case 5:
+                    DisplayRest();
+                    break;
             }
         }
 
+        static void DisplayRest()
+        {
+            Console.WriteLine("휴식하기");
+            Console.WriteLine("500 G 를 내면 체력을 회복할 수 있습니다. (보유 골드 : " + player.Gold + " G");
+
+            Console.WriteLine("\n1. 휴식하기");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+            int input = CheckValidInput(0, 1);
+            switch(input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                case 1:
+                    RecoveryHp();
+                    break;
+            }
+        }
+
+        static void RecoveryHp()
+        {
+            if(player.Gold < 500)
+            {
+                Console.WriteLine("Gold가 부족합니다.");
+            }
+
+            else
+            {
+                player.Hp = 100;
+                Console.WriteLine("휴식을 완료했습니다."); 
+            }
+
+            Console.WriteLine("0. 나가기");
+
+            Console.WriteLine("\n원하시는 행동을 입력해주세요.");
+
+            int input = CheckValidInput(0, 0);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+            }
+        }
 
         static void DisplayDungeon()
         {
