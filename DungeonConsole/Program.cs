@@ -387,7 +387,7 @@ namespace DungeonConsole
             Console.WriteLine("1. 장착 관리");
 
 
-            int input = CheckValidInput(0, 2);
+            int input = CheckValidInput(0, 1);
             switch (input)
             {
                 case 0:
@@ -497,7 +497,7 @@ namespace DungeonConsole
             {
                 itemList[inputItemIdx].IsEquip = true;
                 itemList[inputItemIdx].Name.Replace("[E]", "");
-                switch (itemList[input - 1].Type)
+                switch (itemList[inputItemIdx].Type)
                 {
                     case 'a':
                         player.Atk += itemList[inputItemIdx].TypeEffect;
@@ -513,13 +513,13 @@ namespace DungeonConsole
             {
                 itemList[inputItemIdx].IsEquip = false;
                 itemList[inputItemIdx].Name.Replace("[E]", "");
-                switch (itemList[input - 1].Type)
+                switch (itemList[inputItemIdx].Type)
                 {
                     case 'a':
-                        player.Atk -= itemList[input - 1].TypeEffect;
+                        player.Atk -= itemList[inputItemIdx].TypeEffect;
                         break;
                     case 'd':
-                        player.Def -= itemList[input - 1].TypeEffect;
+                        player.Def -= itemList[inputItemIdx].TypeEffect;
                         break;
                  }
 
