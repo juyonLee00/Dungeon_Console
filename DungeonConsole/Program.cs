@@ -98,6 +98,7 @@ namespace DungeonConsole
 
             for (int i = 0; i < itemList.Count; i++)
             {
+                Console.Write("- ");
                 string itemName = itemList[i].Name;
                 string itemType = "";
                 if (itemList[i].IsEquip)
@@ -114,7 +115,27 @@ namespace DungeonConsole
                     itemType = "방어력";
                 }
 
-                Console.WriteLine($"- {itemName}  {itemType}  +{itemList[i].TypeEffect}  {itemList[i].Content}");
+                Console.Write($"{itemName}");
+
+                string blanks = "";
+                int blankNum = 0;
+                blankNum = 10 - itemName.Length;
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write(blanks);
+                blanks = "";
+
+                string itemEffect = itemType + " + " + itemList[i].TypeEffect.ToString();
+                blankNum = 10 - itemEffect.Length;
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write("|" + itemEffect + blanks + $"|{itemList[i].Content}");
+                Console.WriteLine();
+
             }
 
             Console.WriteLine("0. 나가기");
@@ -168,8 +189,10 @@ namespace DungeonConsole
         static void ManageEquipItem()
         {
             Console.WriteLine("[아이템 목록]");
+
             for (int i = 0; i < itemList.Count; i++)
             {
+                Console.Write("- " + (i + 1) + " ");
                 string itemName = itemList[i].Name;
                 string itemType = "";
                 if (itemList[i].IsEquip)
@@ -186,7 +209,27 @@ namespace DungeonConsole
                     itemType = "방어력";
                 }
 
-                Console.WriteLine($"- {i + 1} {itemName}  {itemType}  +{itemList[i].TypeEffect}  {itemList[i].Content}");
+                Console.Write($"{itemName}");
+
+                string blanks = "";
+                int blankNum = 0;
+                blankNum = 10 - itemName.Length;
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write(blanks);
+                blanks = "";
+
+                string itemEffect = itemType + " + " + itemList[i].TypeEffect.ToString();
+                blankNum = 10 - itemEffect.Length;
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write("|" + itemEffect + blanks + $"|{itemList[i].Content}");
+                Console.WriteLine();
+
             }
 
             Console.WriteLine("장착하거나 해제할 아이템 번호를 선택해주세요.");
