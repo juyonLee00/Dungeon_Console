@@ -24,7 +24,7 @@ namespace DungeonConsole
         static void GameDataSetting()
         {
             //player info setting
-            player = new Character("Chad", "전사", 1, 10, 5, 100, 1500);
+            player = new Character("Chad", "전사", 1, 10, 5, 100, 1500, false, false);
             firstPlayerAtk = player.Atk;
             firstPlayerDef = player.Def;
 
@@ -496,7 +496,6 @@ namespace DungeonConsole
             if (!itemList[inputItemIdx].IsEquip)
             {
                 itemList[inputItemIdx].IsEquip = true;
-                itemList[inputItemIdx].Name.Replace("[E]", "");
                 switch (itemList[inputItemIdx].Type)
                 {
                     case 'a':
@@ -512,7 +511,6 @@ namespace DungeonConsole
             else
             {
                 itemList[inputItemIdx].IsEquip = false;
-                itemList[inputItemIdx].Name.Replace("[E]", "");
                 switch (itemList[inputItemIdx].Type)
                 {
                     case 'a':
@@ -580,8 +578,10 @@ namespace DungeonConsole
             public int Def { get; set; }
             public int Hp { get; }
             public int Gold { get; set; }
+            public bool IsEquipDefItem { get; set; }
+            public bool IsEquipAtkItem { get; set; }
 
-            public Character(string name, string job, int level, int atk, int def, int hp, int gold)
+            public Character(string name, string job, int level, int atk, int def, int hp, int gold, bool isEquipDefItem, bool isEquipAtkItem)
             {
                 Name = name;
                 Job = job;
@@ -590,6 +590,8 @@ namespace DungeonConsole
                 Def = def;
                 Hp = hp;
                 Gold = gold;
+                IsEquipDefItem = isEquipDefItem;
+                IsEquipAtkItem = isEquipAtkItem;
             }
         }
     }
