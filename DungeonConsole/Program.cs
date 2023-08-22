@@ -240,7 +240,7 @@ namespace DungeonConsole
                     break;
             }
 
-            int extraCompensation = basicCompensation * (rand.Next(player.Atk, player.Atk * 2 + 1));
+            int extraCompensation = basicCompensation * (rand.Next(player.Atk, player.Atk * 2 + 1)) / 100;
             int Compensation = basicCompensation + extraCompensation;
 
             player.Gold += Compensation;
