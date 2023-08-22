@@ -10,10 +10,11 @@ namespace DungeonConsole
         private static List<Item> itemList = new List<Item>();
 
         static bool isEquipEvent = false;
-        static int firstPlayerAtk;
+        static float firstPlayerAtk;
         static int firstPlayerDef;
         static bool changeAtk = false;
         static bool changeDef = false;
+        static int DGclearNum = 0;
 
         public static void Main(string[] args)
         {
@@ -240,12 +241,37 @@ namespace DungeonConsole
                     break;
             }
 
-            int extraCompensation = basicCompensation * (rand.Next(player.Atk, player.Atk * 2 + 1)) / 100;
+            int extraCompensation = basicCompensation * (rand.Next((int)player.Atk, (int)player.Atk * 2 + 1)) / 100;
             int Compensation = basicCompensation + extraCompensation;
 
             player.Gold += Compensation;
 
             Console.Write(player.Gold + " G ");
+
+            DGclearNum += 1;
+            switch(DGclearNum)
+            {
+                case 1:
+                    PlayerLevelUp();
+                    break;
+                case 3:
+                    PlayerLevelUp();
+                    break;
+                case 6:
+                    PlayerLevelUp();
+                    break;
+                case 10:
+                    PlayerLevelUp();
+                    break;
+            }
+
+        }
+
+        static void PlayerLevelUp()
+        {
+            player.Level += 1;
+            player.Atk += (float)0.5;
+            player.Def += 1;
         }
 
         static void DisplayMarket()
@@ -578,7 +604,7 @@ namespace DungeonConsole
         static string ShowDifferenceAtkResult()
         {
             string result = "";
-            int abstractAtk = player.Atk - firstPlayerAtk;
+            float abstractAtk = player.Atk - firstPlayerAtk;
             if (abstractAtk != 0)
             {
                 if (abstractAtk > 0)
@@ -726,7 +752,7 @@ namespace DungeonConsole
                         itemList[inputItemIdx].IsEquip = true;
                         player.Def += itemList[inputItemIdx].TypeEffect;
                     }
-                    //디펜스형 아이템을 장착하지 않은 경
+                    //디펜스형 아이템을 장착하지 않은 경우
                     else
                     {
                         player.IsEquipDefItem = true;
@@ -802,15 +828,15 @@ namespace DungeonConsole
         {
             public string Name { get; }
             public string Job { get; }
-            public int Level { get; }
-            public int Atk { get; set; }
+            public int Level { get; set; }
+            public float Atk { get; set; }
             public int Def { get; set; }
             public int Hp { get; set; }
             public int Gold { get; set; }
             public bool IsEquipDefItem { get; set; }
             public bool IsEquipAtkItem { get; set; }
 
-            public Character(string name, string job, int level, int atk, int def, int hp, int gold, bool isEquipDefItem, bool isEquipAtkItem)
+            public Character(string name, string job, int level, float atk, int def, int hp, int gold, bool isEquipDefItem, bool isEquipAtkItem)
             {
                 Name = name;
                 Job = job;
