@@ -491,20 +491,75 @@ namespace DungeonConsole
             Console.WriteLine("장착하거나 해제할 아이템 번호를 선택해주세요.");
             int input = CheckValidInput(1, itemNum);
 
+
             //장착하지 않은 아이템을 장착할 경우
             int inputItemIdx = itemListPair[input];
             if (!itemList[inputItemIdx].IsEquip)
             {
-                itemList[inputItemIdx].IsEquip = true;
-                switch (itemList[inputItemIdx].Type)
+                char inputItemType = itemList[inputItemIdx].Type;
+
+                if(inputItemType == 'a')
                 {
-                    case 'a':
+                    //이미 어택형 아이템 장착할 경우 
+                    if(player.IsEquipAtkItem)
+                    {
+                        int EquipAtkItemIdx = 0;
+                        for(int j=0; j<itemList.Count; j++)
+                        {
+                            if(itemList[j].IsSoldOut && itemList[j].Type == 'a' && itemList[j].IsEquip)
+                            {
+                                EquipAtkItemIdx = j;
+                                break;
+                            }
+                        }
+
+                        itemList[EquipAtkItemIdx].IsEquip = false;
+                        player.Atk -= itemList[EquipAtkItemIdx].TypeEffect;
+
+
+                        itemList[inputItemIdx].IsEquip = true;
                         player.Atk += itemList[inputItemIdx].TypeEffect;
-                        break;
-                    case 'd':
+                    }
+
+                    //어택형 아이템을 장착하고 있지 않을 경우
+                    else
+                    {
+                        player.IsEquipAtkItem = true;
+                        itemList[inputItemIdx].IsEquip = true;
+                        player.Atk += itemList[inputItemIdx].TypeEffect;
+                    }
+                }
+
+                else
+                {
+                    //디펜스형 아이템을 장착한 경우 
+                    if(player.IsEquipDefItem)
+                    {
+                        int EquipDefItemIdx = 0;
+                        for (int j = 0; j < itemList.Count; j++)
+                        {
+                            if (itemList[j].IsSoldOut && itemList[j].Type == 'd' && itemList[j].IsEquip)
+                            {
+                                EquipDefItemIdx = j;
+                                break;
+                            }
+                        }
+
+                        itemList[EquipDefItemIdx].IsEquip = false;
+                        player.Def -= itemList[EquipDefItemIdx].TypeEffect;
+
+
+                        itemList[inputItemIdx].IsEquip = true;
                         player.Def += itemList[inputItemIdx].TypeEffect;
-                        break;
-                 }
+                    }
+                    //디펜스형 아이템을 장착하지 않은 경
+                    else
+                    {
+                        player.IsEquipDefItem = true;
+                        itemList[inputItemIdx].IsEquip = true;
+                        player.Def += itemList[inputItemIdx].TypeEffect;
+                    }
+                }
 
             }
             //장착한 아이템을 장착하지 않을 경우 
