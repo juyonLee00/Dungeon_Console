@@ -436,11 +436,19 @@ namespace DungeonConsole
         {
             Console.WriteLine("[아이템 목록]");
 
+            int itemNum = 0;
+            Dictionary<int, int> itemListPair = new Dictionary<int, int>();
+
             for (int i = 0; i < itemList.Count; i++)
             {
                 if (!itemList[i].IsSoldOut)
+                {
                     continue;
-                Console.Write("- " + (i + 1) + " ");
+                }
+                itemNum+=1;
+                itemListPair.Add(itemNum, i);
+
+                Console.Write("- " + (itemNum) + " ");
                 string itemName = itemList[i].Name;
                 string itemType = "";
                 if (itemList[i].IsEquip)
@@ -481,20 +489,21 @@ namespace DungeonConsole
             }
 
             Console.WriteLine("장착하거나 해제할 아이템 번호를 선택해주세요.");
-            int input = int.Parse(Console.ReadLine());
+            int input = CheckValidInput(1, itemNum);
 
-            //장착하지 않은 아이템을 장착할 경우 
-            if (!itemList[input - 1].IsEquip)
+            //장착하지 않은 아이템을 장착할 경우
+            int inputItemIdx = itemListPair[input];
+            if (!itemList[inputItemIdx].IsEquip)
             {
-                itemList[input - 1].IsEquip = true;
-                itemList[input - 1].Name.Replace("[E]", "");
+                itemList[inputItemIdx].IsEquip = true;
+                itemList[inputItemIdx].Name.Replace("[E]", "");
                 switch (itemList[input - 1].Type)
                 {
                     case 'a':
-                        player.Atk += itemList[input - 1].TypeEffect;
+                        player.Atk += itemList[inputItemIdx].TypeEffect;
                         break;
                     case 'd':
-                        player.Def += itemList[input - 1].TypeEffect;
+                        player.Def += itemList[inputItemIdx].TypeEffect;
                         break;
                  }
 
@@ -502,8 +511,8 @@ namespace DungeonConsole
             //장착한 아이템을 장착하지 않을 경우 
             else
             {
-                itemList[input - 1].IsEquip = false;
-                itemList[input - 1].Name.Replace("[E]", "");
+                itemList[inputItemIdx].IsEquip = false;
+                itemList[inputItemIdx].Name.Replace("[E]", "");
                 switch (itemList[input - 1].Type)
                 {
                     case 'a':
