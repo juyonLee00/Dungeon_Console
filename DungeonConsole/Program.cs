@@ -271,7 +271,10 @@ namespace DungeonConsole
         {
             player.Level += 1;
             player.Atk += (float)0.5;
+            firstPlayerAtk = player.Atk;
+
             player.Def += 1;
+            firstPlayerDef = player.Def;
         }
 
         static void DisplayMarket()
@@ -752,7 +755,7 @@ namespace DungeonConsole
                         itemList[inputItemIdx].IsEquip = true;
                         player.Def += itemList[inputItemIdx].TypeEffect;
                     }
-                    //디펜스형 아이템을 장착하지 않은 경우
+                    //디펜스형 아이템을 장착하지 않은 경
                     else
                     {
                         player.IsEquipDefItem = true;
