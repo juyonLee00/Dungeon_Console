@@ -241,6 +241,11 @@ namespace DungeonConsole
             fs.Close();
 
 
+            fs = new FileStream(userItemDataPath, FileMode.Create);
+            bf.Serialize(fs, itemList);
+            fs.Close();
+
+
         }
 
         static void DisplayRest()
