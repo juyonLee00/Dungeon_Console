@@ -81,12 +81,12 @@ namespace DungeonConsole
                 Console.Clear();
                 Console.WriteLine("[세이브 데이터]");
 
-                
-                for(int i=0; i < files.Length; i++)
+
+                for (int i = 0; i < files.Length; i++)
                 {
                     if (files[i].Name.Contains("_"))
                         continue;
-                    Console.WriteLine("- " + files[i].Name.Replace(".txt",""));
+                    Console.WriteLine("- " + files[i].Name.Replace(".txt", ""));
                 }
                 Console.WriteLine("\n불러올 데이터를 선택해주세요.");
                 string inputPlayerName = Console.ReadLine();
@@ -97,7 +97,7 @@ namespace DungeonConsole
                     Console.WriteLine("0. 나가기\n\n");
 
                     int inputNum = CheckValidInput(0, 0);
-                    switch(inputNum)
+                    switch (inputNum)
                     {
                         case 0:
                             DisplayGameStart();
@@ -123,7 +123,7 @@ namespace DungeonConsole
                 Console.WriteLine("0. 게임 시작\n");
 
                 int input = CheckValidInput(0, 0);
-                switch(input)
+                switch (input)
                 {
                     case 0:
                         DisplayGameIntro();
@@ -131,7 +131,7 @@ namespace DungeonConsole
                 }
 
             }
-            
+
         }
 
 
@@ -230,7 +230,7 @@ namespace DungeonConsole
             Console.WriteLine("\n선택지를 입력해주세요");
 
             int input = CheckValidInput(0, 1);
-            switch(input)
+            switch (input)
             {
                 case 0:
                     DisplayGameIntro();
@@ -251,7 +251,7 @@ namespace DungeonConsole
 
             FileInfo fileInfo = new FileInfo(userStatusDataPath);
 
-            if(fileInfo.Exists)
+            if (fileInfo.Exists)
             {
                 File.Delete(userStatusDataPath);
                 File.Delete(userItemDataPath);
@@ -282,7 +282,7 @@ namespace DungeonConsole
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
             int input = CheckValidInput(0, 1);
-            switch(input)
+            switch (input)
             {
                 case 0:
                     DisplayGameIntro();
@@ -295,7 +295,7 @@ namespace DungeonConsole
 
         static void RecoveryHp()
         {
-            if(player.Gold < 500)
+            if (player.Gold < 500)
             {
                 Console.WriteLine("Gold가 부족합니다.");
             }
@@ -303,7 +303,7 @@ namespace DungeonConsole
             else
             {
                 player.Hp = 100;
-                Console.WriteLine("휴식을 완료했습니다."); 
+                Console.WriteLine("휴식을 완료했습니다.");
             }
 
             Console.WriteLine("0. 나가기");
@@ -353,7 +353,7 @@ namespace DungeonConsole
                 Random rand = new Random();
                 int playerDGNum = rand.Next(1, 11);
 
-                if(playerDGNum < 5)
+                if (playerDGNum < 5)
                 {
                     FailDungeon();
                 }
@@ -413,7 +413,7 @@ namespace DungeonConsole
 
             int basicCompensation = 0;
 
-            switch(input)
+            switch (input)
             {
                 case 1:
                     basicCompensation = 1000;
@@ -434,7 +434,7 @@ namespace DungeonConsole
             Console.Write(player.Gold + " G ");
 
             DGclearNum += 1;
-            switch(DGclearNum)
+            switch (DGclearNum)
             {
                 case 1:
                     PlayerLevelUp();
@@ -788,7 +788,7 @@ namespace DungeonConsole
                     break;
             }
         }
-    
+
 
         static string ShowDifferenceAtkResult()
         {
@@ -811,7 +811,7 @@ namespace DungeonConsole
             string result = "";
             int abstractDef = player.Def - firstPlayerDef;
             if (abstractDef != 0)
-            { 
+            {
                 if (abstractDef > 0)
                     result = " (+" + abstractDef.ToString() + ")";
                 else
@@ -835,7 +835,7 @@ namespace DungeonConsole
                 {
                     continue;
                 }
-                itemNum+=1;
+                itemNum += 1;
                 itemListPair.Add(itemNum, i);
 
                 Console.Write("- " + (itemNum) + " ");
@@ -887,14 +887,14 @@ namespace DungeonConsole
             {
                 char inputItemType = itemList[inputItemIdx].Type;
 
-                if(inputItemType == 'a')
+                if (inputItemType == 'a')
                 {
-                    if(player.IsEquipAtkItem)
+                    if (player.IsEquipAtkItem)
                     {
                         int EquipAtkItemIdx = 0;
-                        for(int j=0; j<itemList.Count; j++)
+                        for (int j = 0; j < itemList.Count; j++)
                         {
-                            if(itemList[j].IsSoldOut && itemList[j].Type == 'a' && itemList[j].IsEquip)
+                            if (itemList[j].IsSoldOut && itemList[j].Type == 'a' && itemList[j].IsEquip)
                             {
                                 EquipAtkItemIdx = j;
                                 break;
@@ -919,7 +919,7 @@ namespace DungeonConsole
 
                 else
                 {
-                    if(player.IsEquipDefItem)
+                    if (player.IsEquipDefItem)
                     {
                         int EquipDefItemIdx = 0;
                         for (int j = 0; j < itemList.Count; j++)
@@ -959,7 +959,7 @@ namespace DungeonConsole
                     case 'd':
                         player.Def -= itemList[inputItemIdx].TypeEffect;
                         break;
-                 }
+                }
 
             }
             DisplayMyInfo();
@@ -981,59 +981,8 @@ namespace DungeonConsole
                 }
 
                 Console.WriteLine("잘못된 입력입니다.");
-             }
-        }
-    }
-
-    [Serializable]
-    public class Item
-        {
-            public string Name { get; }
-            public bool IsEquip { get; set; }
-            public char Type { get; }
-            public int TypeEffect { get; }
-            public string Content { get; }
-            public int Price { get; set; }
-            public bool IsSoldOut { get; set; }
-
-            public Item(string name, bool isEquip, char type, int typeEffect, string content, int price, bool isSoldOut)
-            {
-                Name = name;
-                IsEquip = isEquip;
-                Type = type;
-                TypeEffect = typeEffect;
-                Content = content;
-                Price = price;
-                IsSoldOut = isSoldOut;
-            }
-
-
-        }
-
-    [Serializable]
-    public class Character
-        {
-            public string Name { get; }
-            public string Job { get; }
-            public int Level { get; set; }
-            public float Atk { get; set; }
-            public int Def { get; set; }
-            public int Hp { get; set; }
-            public int Gold { get; set; }
-            public bool IsEquipDefItem { get; set; }
-            public bool IsEquipAtkItem { get; set; }
-
-            public Character(string name, string job, int level, float atk, int def, int hp, int gold, bool isEquipDefItem, bool isEquipAtkItem)
-            {
-                Name = name;
-                Job = job;
-                Level = level;
-                Atk = atk;
-                Def = def;
-                Hp = hp;
-                Gold = gold;
-                IsEquipDefItem = isEquipDefItem;
-                IsEquipAtkItem = isEquipAtkItem;
             }
         }
     }
+
+}
