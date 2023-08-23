@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace DungeonConsole
 {
@@ -9,6 +10,7 @@ namespace DungeonConsole
     {
         private static Character player;
         private static List<Item> itemList = new List<Item>();
+        private static string path = "/Users/juyon/Desktop/DungeonConsole/DungeonConsole/userData/";
 
         static bool isEquipEvent = false;
         static float firstPlayerAtk;
@@ -52,7 +54,6 @@ namespace DungeonConsole
 
         static void LoadSaveData()
         {
-            string path = "/Users/juyon/Desktop/DungeonConsole/userData/";
             DirectoryInfo di = new DirectoryInfo(path);
             FileInfo[] files = new FileInfo[30];
 
@@ -187,6 +188,25 @@ namespace DungeonConsole
 
         static void SaveUserData()
         {
+            string userStatusName = player.Name + ".txt";
+            string userItemName = player.Name + "Item.txt";
+
+            string userStatusDataPath = path + userStatusName;
+            string userItemDataPath = path + userItemName;
+
+            FileInfo fileInfo = new FileInfo(userStatusDataPath);
+
+            if(fileInfo.Exists)
+            {
+                File.Delete(userStatusDataPath);
+                File.Delete(userItemDataPath);
+            }
+
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fs = new FileStream(userStatusDataPath, FileMode.Create);
+            bf.Serialize(fs, player);
+            fs.Close();
+
 
         }
 
@@ -908,10 +928,11 @@ namespace DungeonConsole
         }
     }
 
+    [Serializable]
     public class Item
         {
             public string Name { get; }
-            public bool IsEquip { get; set; } //기본 false로 설정 .
+            public bool IsEquip { get; set; }
             public char Type { get; }
             public int TypeEffect { get; }
             public string Content { get; }
@@ -932,6 +953,7 @@ namespace DungeonConsole
 
         }
 
+    [Serializable]
     public class Character
         {
             public string Name { get; }
