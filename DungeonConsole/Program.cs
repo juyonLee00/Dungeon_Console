@@ -83,24 +83,42 @@ namespace DungeonConsole
                 
                 for(int i=0; i < files.Length; i++)
                 {
-                    Console.Write(i + 1);
-                    Console.WriteLine(". " + files[i].Name);
+                    if (files[i].Name.Contains("_"))
+                        continue;
+                    Console.WriteLine("- " + files[i].Name.Replace(".txt",""));
                 }
                 Console.WriteLine("\n불러올 데이터를 선택해주세요.");
-                int input = CheckValidInput(1, files.Length + 1);
+                string inputPlayerName = Console.ReadLine();
+                inputPlayerName.Trim();
+                if (!File.Exists(path + inputPlayerName + ".txt"))
+                {
+                    Console.WriteLine("존재하지 않는 플레이어입니다!\n");
+                    Console.WriteLine("0. 나가기\n\n");
+
+                    int inputNum = CheckValidInput(0, 0);
+                    switch(inputNum)
+                    {
+                        case 0:
+                            DisplayGameStart();
+                            break;
+                    }
+
+                }
 
                 BinaryFormatter bf = new BinaryFormatter();
-
-                FileStream fs = new FileStream(path + files[input - 1].Name, FileMode.Open);
-
+                FileStream fs = new FileStream(path + inputPlayerName + ".txt", FileMode.Open);
                 player = bf.Deserialize(fs) as Character;
+                fs.Close();
+
+                fs = new FileStream(path + inputPlayerName + "_Item.txt", FileMode.Open);
+                itemList = bf.Deserialize(fs) as List<Item>;
                 fs.Close();
 
                 Console.Clear();
                 Console.WriteLine("저장된 데이터를 불러왔습니다! 게임을 시작해주세요.");
                 Console.WriteLine("0. 게임 시작\n");
 
-                input = CheckValidInput(0, 0);
+                int input = CheckValidInput(0, 0);
                 switch(input)
                 {
                     case 0:
