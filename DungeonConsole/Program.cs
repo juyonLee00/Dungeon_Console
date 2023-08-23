@@ -20,10 +20,14 @@ namespace DungeonConsole
         static int DGclearNum = 0;
 
 
+
+
         public static void Main(string[] args)
         {
             DisplayGameStart();
         }
+
+
 
 
         static void DisplayGameStart()
@@ -52,6 +56,7 @@ namespace DungeonConsole
             }
 
         }
+
 
 
         //저장된 데이터를 가져오는 함수
@@ -231,481 +236,9 @@ namespace DungeonConsole
             }
         }
 
-        static void DisplayCheckSaveData()
-        {
-            Console.Clear();
-            Console.WriteLine("현재 데이터를 저장하시겠습니까?\n\n");
-            Console.WriteLine("0. 저장 안 함");
-            Console.WriteLine("1. 저장");
 
-            Console.WriteLine("\n선택지를 입력해주세요");
 
-            int input = CheckValidInput(0, 1);
-            switch (input)
-            {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-                case 1:
-                    SaveUserData();
-                    break;
-            }
-        }
-
-        static void SaveUserData()
-        {
-            string userStatusName = player.Name + ".txt";
-            string userItemName = player.Name + "_Item.txt";
-
-            string userStatusDataPath = path + userStatusName;
-            string userItemDataPath = path + userItemName;
-
-            FileInfo fileInfo = new FileInfo(userStatusDataPath);
-
-            if (fileInfo.Exists)
-            {
-                File.Delete(userStatusDataPath);
-                File.Delete(userItemDataPath);
-            }
-
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fs = new FileStream(userStatusDataPath, FileMode.Create);
-            bf.Serialize(fs, player);
-            fs.Close();
-
-
-            fs = new FileStream(userItemDataPath, FileMode.Create);
-            bf.Serialize(fs, itemList);
-            fs.Close();
-
-            Console.Clear();
-            Console.WriteLine("해당 데이터를 저장했습니다.\n");
-            Console.WriteLine("0. 나가기");
-
-            int input = CheckValidInput(0, 0);
-            switch(input)
-            {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-            }
-        }
-
-        static void DisplayRest()
-        {
-            Console.Clear();
-            Console.WriteLine("휴식하기");
-            Console.WriteLine("500 G 를 내면 체력을 회복할 수 있습니다. (보유 골드 : " + player.Gold + " G");
-
-            Console.WriteLine("\n1. 휴식하기");
-            Console.WriteLine("0. 나가기");
-            Console.WriteLine();
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-
-            int input = CheckValidInput(0, 1);
-            switch (input)
-            {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-                case 1:
-                    RecoveryHp();
-                    break;
-            }
-        }
-
-        static void RecoveryHp()
-        {
-            if (player.Gold < 500)
-            {
-                Console.WriteLine("Gold가 부족합니다.");
-            }
-
-            else
-            {
-                player.Hp = 100;
-                Console.WriteLine("휴식을 완료했습니다.");
-            }
-
-            Console.WriteLine("0. 나가기");
-
-            Console.WriteLine("\n원하시는 행동을 입력해주세요.");
-
-            int input = CheckValidInput(0, 0);
-            switch (input)
-            {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-            }
-        }
-
-        static void DisplayDungeon()
-        {
-            Console.Clear();
-            Console.WriteLine("던전입장");
-            Console.WriteLine("이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.");
-            Console.WriteLine();
-
-            Console.WriteLine("1. 쉬운 던전    | 방어력 5 이상 권장");
-            Console.WriteLine("2. 일반 던전    | 방어력 11 이상 권장");
-            Console.WriteLine("3. 어려운 던전   | 방어력 17 이상 권장");
-            Console.WriteLine("0. 나가기");
-
-            Console.WriteLine("\n원하시는 행동을 입력해주세요.");
-            int input = CheckValidInput(0, 3);
-            switch (input)
-            {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-                default:
-                    EntryDungeon(input);
-                    break;
-            }
-        }
-
-        static void EntryDungeon(int level)
-        {
-            Console.Clear();
-            int recommendedDef = 5 + 6 * (level - 1);
-            if (player.Def < recommendedDef)
-            {
-                Random rand = new Random();
-                int playerDGNum = rand.Next(1, 11);
-
-                if (playerDGNum < 5)
-                {
-                    FailDungeon();
-                }
-
-                else
-                {
-                    ClearDungeon(level);
-                }
-            }
-
-            else
-            {
-                ClearDungeon(level);
-            }
-
-            Console.WriteLine("\n0. 나가기\n");
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-
-            int input = CheckValidInput(0, 0);
-            switch (input)
-            {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-            }
-        }
-
-
-        static void FailDungeon()
-        {
-            Console.WriteLine("던전 클리어를 실패하셨습니다.");
-            Console.Write("Hp : " + player.Hp);
-
-            player.Hp /= 2;
-
-            Console.Write(" -> " + player.Hp);
-        }
-
-        static void ClearDungeon(int input)
-        {
-            Console.WriteLine("던전 클리어");
-            Console.WriteLine("축하합니다!! \n쉬운 던전을 클리어 하였습니다.\n");
-
-            Console.WriteLine("[탐험 결과]");
-            Console.Write("체력 " + player.Hp);
-
-            int recommendedDef = 5 + 6 * (input - 1);
-            int AbsDef = recommendedDef - player.Def;
-
-            Random rand = new Random();
-            int lossHp = rand.Next(20 + AbsDef, 35 + AbsDef + 1);
-            player.Hp -= lossHp;
-
-            Console.Write(" -> " + player.Hp);
-            Console.WriteLine();
-            Console.Write("Gold " + player.Gold + " G -> ");
-
-            int basicCompensation = 0;
-
-            switch (input)
-            {
-                case 1:
-                    basicCompensation = 1000;
-                    break;
-                case 2:
-                    basicCompensation = 1700;
-                    break;
-                case 3:
-                    basicCompensation = 2500;
-                    break;
-            }
-
-            int extraCompensation = basicCompensation * (rand.Next((int)player.Atk, (int)player.Atk * 2 + 1)) / 100;
-            int Compensation = basicCompensation + extraCompensation;
-
-            player.Gold += Compensation;
-
-            Console.Write(player.Gold + " G ");
-
-            DGclearNum += 1;
-            switch (DGclearNum)
-            {
-                case 1:
-                    PlayerLevelUp();
-                    break;
-                case 3:
-                    PlayerLevelUp();
-                    break;
-                case 6:
-                    PlayerLevelUp();
-                    break;
-                case 10:
-                    PlayerLevelUp();
-                    break;
-            }
-
-        }
-
-        static void PlayerLevelUp()
-        {
-            player.Level += 1;
-            player.Atk += (float)0.5;
-            firstPlayerAtk = player.Atk;
-
-            player.Def += 1;
-            firstPlayerDef = player.Def;
-        }
-
-        static void DisplayMarket()
-        {
-            Console.Clear();
-            Console.WriteLine("상점");
-            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
-
-            Console.WriteLine("[아이템 목록]");
-
-
-            for (int i = 0; i < itemList.Count; i++)
-            {
-                Console.Write("- ");
-                string itemName = itemList[i].Name;
-                string itemType = "";
-                if (itemList[i].IsEquip)
-                {
-                    itemName = "[E]" + itemName;
-                }
-
-                if (itemList[i].Type == 'a')
-                {
-                    itemType = "공격력";
-                }
-                else if (itemList[i].Type == 'd')
-                {
-                    itemType = "방어력";
-                }
-
-                Console.Write($"{itemName}");
-
-                string blanks = "";
-                int blankNum = 0;
-                blankNum = 10 - itemName.Length;
-                for (int j = 0; j < blankNum; j++)
-                {
-                    blanks += " ";
-                }
-                Console.Write(blanks);
-                blanks = "";
-
-                string itemEffect = itemType + " + " + itemList[i].TypeEffect.ToString();
-                blankNum = 10 - itemEffect.Length;
-                for (int j = 0; j < blankNum; j++)
-                {
-                    blanks += " ";
-                }
-                Console.Write("|" + itemEffect + blanks);
-
-                blanks = "";
-                blankNum = 30 - itemList[i].Content.Length;
-
-                for (int j = 0; j < blankNum; j++)
-                {
-                    blanks += " ";
-                }
-                Console.Write($"| {itemList[i].Content}" + blanks + " | ");
-
-                if (itemList[i].IsSoldOut)
-                {
-                    Console.Write("구매완료");
-                }
-                else
-                {
-                    Console.Write($"{itemList[i].Price}");
-                }
-
-                Console.WriteLine();
-
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("1. 아이템 구매");
-            Console.WriteLine("0. 나가기");
-
-
-            int input = CheckValidInput(0, 1);
-            switch (input)
-            {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-                case 1:
-                    PurchaseItem();
-                    break;
-            }
-        }
-
-
-
-        static void PurchaseItem()
-        {
-            Console.Clear();
-            Console.WriteLine("상점");
-            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
-
-            Console.WriteLine("[아이템 목록]");
-
-
-            for (int i = 0; i < itemList.Count; i++)
-            {
-                Console.Write($"- {i + 1}  ");
-                string itemName = itemList[i].Name;
-                string itemType = "";
-                if (itemList[i].IsEquip)
-                {
-                    itemName = "[E]" + itemName;
-                }
-
-                if (itemList[i].Type == 'a')
-                {
-                    itemType = "공격력";
-                }
-                else if (itemList[i].Type == 'd')
-                {
-                    itemType = "방어력";
-                }
-
-                Console.Write($"{itemName}");
-
-                string blanks = "";
-                int blankNum = 0;
-                blankNum = 10 - itemName.Length;
-                for (int j = 0; j < blankNum; j++)
-                {
-                    blanks += " ";
-                }
-                Console.Write(blanks);
-                blanks = "";
-
-                string itemEffect = itemType + " + " + itemList[i].TypeEffect.ToString();
-                blankNum = 10 - itemEffect.Length;
-                for (int j = 0; j < blankNum; j++)
-                {
-                    blanks += " ";
-                }
-                Console.Write("|" + itemEffect + blanks);
-
-                blanks = "";
-                blankNum = 30 - itemList[i].Content.Length;
-
-                for (int j = 0; j < blankNum; j++)
-                {
-                    blanks += " ";
-                }
-                Console.Write($"| {itemList[i].Content}" + blanks + " | ");
-
-                if (itemList[i].IsSoldOut)
-                {
-                    Console.Write("구매완료");
-                }
-                else
-                {
-                    Console.Write($"{itemList[i].Price}");
-                }
-
-                Console.WriteLine();
-
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("0. 나가기");
-            Console.WriteLine();
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-
-
-            int input = CheckValidInput(0, 7);
-
-            switch (input)
-            {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-                default:
-                    IsPurchasedItem(input - 1);
-                    break;
-            }
-
-        }
-
-
-
-        static void IsPurchasedItem(int itemIdx)
-        {
-            if (itemList[itemIdx].IsSoldOut)
-                Console.WriteLine("이미 구매한 아이템입니다.");
-
-            else
-            {
-                if (player.Gold >= itemList[itemIdx].Price)
-                {
-                    Console.WriteLine("구매를 완료했습니다.");
-                    player.Gold -= itemList[itemIdx].Price;
-                    itemList[itemIdx].IsSoldOut = true;
-                }
-
-                else
-                {
-                    Console.WriteLine("Gold가 부족합니다.");
-                }
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("1. 상점으로 돌아가기");
-            Console.WriteLine("0. 나가기");
-            Console.WriteLine();
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-
-
-            int input = CheckValidInput(0, 1);
-
-            switch (input)
-            {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-                case 1:
-                    DisplayMarket();
-                    break;
-            }
-
-        }
-
-
+        //플레이어 상태 정보 확인
         static void DisplayMyInfo()
         {
             Console.Clear();
@@ -731,6 +264,9 @@ namespace DungeonConsole
             }
         }
 
+
+
+        //유저 인벤토리 정보 확인 
         static void DisplayInventory()
         {
             Console.WriteLine("인벤토리 - 장착 관리");
@@ -811,37 +347,8 @@ namespace DungeonConsole
         }
 
 
-        static string ShowDifferenceAtkResult()
-        {
-            string result = "";
-            float abstractAtk = player.Atk - firstPlayerAtk;
-            if (abstractAtk != 0)
-            {
-                if (abstractAtk > 0)
-                    result = " (+" + abstractAtk.ToString() + ")";
-                else
-                    result = " (-" + (Math.Abs(player.Atk - firstPlayerAtk)).ToString() + ")";
 
-            }
-            return result;
-        }
-
-
-        static string ShowDifferenceDefResult()
-        {
-            string result = "";
-            int abstractDef = player.Def - firstPlayerDef;
-            if (abstractDef != 0)
-            {
-                if (abstractDef > 0)
-                    result = " (+" + abstractDef.ToString() + ")";
-                else
-                    result = " (-" + (Math.Abs(abstractDef)).ToString() + ")";
-
-            }
-            return result;
-        }
-
+        //아이템 장착하기 
         static void ManageEquipItem()
         {
             Console.Clear();
@@ -985,6 +492,532 @@ namespace DungeonConsole
             }
             DisplayMyInfo();
         }
+
+
+
+        //상점 기능
+        static void DisplayMarket()
+        {
+            Console.Clear();
+            Console.WriteLine("상점");
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
+
+            Console.WriteLine("[아이템 목록]");
+
+
+            for (int i = 0; i < itemList.Count; i++)
+            {
+                Console.Write("- ");
+                string itemName = itemList[i].Name;
+                string itemType = "";
+                if (itemList[i].IsEquip)
+                {
+                    itemName = "[E]" + itemName;
+                }
+
+                if (itemList[i].Type == 'a')
+                {
+                    itemType = "공격력";
+                }
+                else if (itemList[i].Type == 'd')
+                {
+                    itemType = "방어력";
+                }
+
+                Console.Write($"{itemName}");
+
+                string blanks = "";
+                int blankNum = 0;
+                blankNum = 10 - itemName.Length;
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write(blanks);
+                blanks = "";
+
+                string itemEffect = itemType + " + " + itemList[i].TypeEffect.ToString();
+                blankNum = 10 - itemEffect.Length;
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write("|" + itemEffect + blanks);
+
+                blanks = "";
+                blankNum = 30 - itemList[i].Content.Length;
+
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write($"| {itemList[i].Content}" + blanks + " | ");
+
+                if (itemList[i].IsSoldOut)
+                {
+                    Console.Write("구매완료");
+                }
+                else
+                {
+                    Console.Write($"{itemList[i].Price}");
+                }
+
+                Console.WriteLine();
+
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("1. 아이템 구매");
+            Console.WriteLine("0. 나가기");
+
+
+            int input = CheckValidInput(0, 1);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                case 1:
+                    PurchaseItem();
+                    break;
+            }
+        }
+
+
+        //아이템 구매
+        static void PurchaseItem()
+        {
+            Console.Clear();
+            Console.WriteLine("상점");
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
+
+            Console.WriteLine("[아이템 목록]");
+
+
+            for (int i = 0; i < itemList.Count; i++)
+            {
+                Console.Write($"- {i + 1}  ");
+                string itemName = itemList[i].Name;
+                string itemType = "";
+                if (itemList[i].IsEquip)
+                {
+                    itemName = "[E]" + itemName;
+                }
+
+                if (itemList[i].Type == 'a')
+                {
+                    itemType = "공격력";
+                }
+                else if (itemList[i].Type == 'd')
+                {
+                    itemType = "방어력";
+                }
+
+                Console.Write($"{itemName}");
+
+                string blanks = "";
+                int blankNum = 0;
+                blankNum = 10 - itemName.Length;
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write(blanks);
+                blanks = "";
+
+                string itemEffect = itemType + " + " + itemList[i].TypeEffect.ToString();
+                blankNum = 10 - itemEffect.Length;
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write("|" + itemEffect + blanks);
+
+                blanks = "";
+                blankNum = 30 - itemList[i].Content.Length;
+
+                for (int j = 0; j < blankNum; j++)
+                {
+                    blanks += " ";
+                }
+                Console.Write($"| {itemList[i].Content}" + blanks + " | ");
+
+                if (itemList[i].IsSoldOut)
+                {
+                    Console.Write("구매완료");
+                }
+                else
+                {
+                    Console.Write($"{itemList[i].Price}");
+                }
+
+                Console.WriteLine();
+
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+
+            int input = CheckValidInput(0, 7);
+
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                default:
+                    IsPurchasedItem(input - 1);
+                    break;
+            }
+
+        }
+
+
+         //아이템 구매 가능 여부 확인
+        static void IsPurchasedItem(int itemIdx)
+        {
+            if (itemList[itemIdx].IsSoldOut)
+                Console.WriteLine("이미 구매한 아이템입니다.");
+
+            else
+            {
+                if (player.Gold >= itemList[itemIdx].Price)
+                {
+                    Console.WriteLine("구매를 완료했습니다.");
+                    player.Gold -= itemList[itemIdx].Price;
+                    itemList[itemIdx].IsSoldOut = true;
+                }
+
+                else
+                {
+                    Console.WriteLine("Gold가 부족합니다.");
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("1. 상점으로 돌아가기");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+
+            int input = CheckValidInput(0, 1);
+
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                case 1:
+                    DisplayMarket();
+                    break;
+            }
+
+        }
+
+
+
+        //휴식 기능
+        static void DisplayRest()
+        {
+            Console.Clear();
+            Console.WriteLine("휴식하기");
+            Console.WriteLine("500 G 를 내면 체력을 회복할 수 있습니다. (보유 골드 : " + player.Gold + " G");
+
+            Console.WriteLine("\n1. 휴식하기");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+            int input = CheckValidInput(0, 1);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                case 1:
+                    RecoveryHp();
+                    break;
+            }
+        }
+
+        static void RecoveryHp()
+        {
+            if (player.Gold < 500)
+            {
+                Console.WriteLine("Gold가 부족합니다.");
+            }
+
+            else
+            {
+                player.Hp = 100;
+                Console.WriteLine("휴식을 완료했습니다.");
+            }
+
+            Console.WriteLine("0. 나가기");
+
+            Console.WriteLine("\n원하시는 행동을 입력해주세요.");
+
+            int input = CheckValidInput(0, 0);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+            }
+        }
+
+
+
+        //던전 기능
+        static void DisplayDungeon()
+        {
+            Console.Clear();
+            Console.WriteLine("던전입장");
+            Console.WriteLine("이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.");
+            Console.WriteLine();
+
+            Console.WriteLine("1. 쉬운 던전    | 방어력 5 이상 권장");
+            Console.WriteLine("2. 일반 던전    | 방어력 11 이상 권장");
+            Console.WriteLine("3. 어려운 던전   | 방어력 17 이상 권장");
+            Console.WriteLine("0. 나가기");
+
+            Console.WriteLine("\n원하시는 행동을 입력해주세요.");
+            int input = CheckValidInput(0, 3);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                default:
+                    EntryDungeon(input);
+                    break;
+            }
+        }
+
+        static void EntryDungeon(int level)
+        {
+            Console.Clear();
+            int recommendedDef = 5 + 6 * (level - 1);
+            if (player.Def < recommendedDef)
+            {
+                Random rand = new Random();
+                int playerDGNum = rand.Next(1, 11);
+
+                if (playerDGNum < 5)
+                {
+                    FailDungeon();
+                }
+
+                else
+                {
+                    ClearDungeon(level);
+                }
+            }
+
+            else
+            {
+                ClearDungeon(level);
+            }
+
+            Console.WriteLine("\n0. 나가기\n");
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+            int input = CheckValidInput(0, 0);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+            }
+        }
+
+
+        static void FailDungeon()
+        {
+            Console.WriteLine("던전 클리어를 실패하셨습니다.");
+            Console.Write("Hp : " + player.Hp);
+
+            player.Hp /= 2;
+
+            Console.Write(" -> " + player.Hp);
+        }
+
+        static void ClearDungeon(int input)
+        {
+            Console.WriteLine("던전 클리어");
+            Console.WriteLine("축하합니다!! \n쉬운 던전을 클리어 하였습니다.\n");
+
+            Console.WriteLine("[탐험 결과]");
+            Console.Write("체력 " + player.Hp);
+
+            int recommendedDef = 5 + 6 * (input - 1);
+            int AbsDef = recommendedDef - player.Def;
+
+            Random rand = new Random();
+            int lossHp = rand.Next(20 + AbsDef, 35 + AbsDef + 1);
+            player.Hp -= lossHp;
+
+            Console.Write(" -> " + player.Hp);
+            Console.WriteLine();
+            Console.Write("Gold " + player.Gold + " G -> ");
+
+            int basicCompensation = 0;
+
+            switch (input)
+            {
+                case 1:
+                    basicCompensation = 1000;
+                    break;
+                case 2:
+                    basicCompensation = 1700;
+                    break;
+                case 3:
+                    basicCompensation = 2500;
+                    break;
+            }
+
+            int extraCompensation = basicCompensation * (rand.Next((int)player.Atk, (int)player.Atk * 2 + 1)) / 100;
+            int Compensation = basicCompensation + extraCompensation;
+
+            player.Gold += Compensation;
+
+            Console.Write(player.Gold + " G ");
+
+            DGclearNum += 1;
+            switch (DGclearNum)
+            {
+                case 1:
+                    PlayerLevelUp();
+                    break;
+                case 3:
+                    PlayerLevelUp();
+                    break;
+                case 6:
+                    PlayerLevelUp();
+                    break;
+                case 10:
+                    PlayerLevelUp();
+                    break;
+            }
+
+        }
+
+        static void PlayerLevelUp()
+        {
+            player.Level += 1;
+            player.Atk += (float)0.5;
+            firstPlayerAtk = player.Atk;
+
+            player.Def += 1;
+            firstPlayerDef = player.Def;
+        }
+
+
+        //데이터 저장 여부 체크
+        static void DisplayCheckSaveData()
+        {
+            Console.Clear();
+            Console.WriteLine("현재 데이터를 저장하시겠습니까?\n\n");
+            Console.WriteLine("0. 저장 안 함");
+            Console.WriteLine("1. 저장");
+
+            Console.WriteLine("\n선택지를 입력해주세요");
+
+            int input = CheckValidInput(0, 1);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                case 1:
+                    SaveUserData();
+                    break;
+            }
+        }
+
+
+        //유저 데이터 저장
+        static void SaveUserData()
+        {
+            string userStatusName = player.Name + ".txt";
+            string userItemName = player.Name + "_Item.txt";
+
+            string userStatusDataPath = path + userStatusName;
+            string userItemDataPath = path + userItemName;
+
+            FileInfo fileInfo = new FileInfo(userStatusDataPath);
+
+            if (fileInfo.Exists)
+            {
+                File.Delete(userStatusDataPath);
+                File.Delete(userItemDataPath);
+            }
+
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fs = new FileStream(userStatusDataPath, FileMode.Create);
+            bf.Serialize(fs, player);
+            fs.Close();
+
+
+            fs = new FileStream(userItemDataPath, FileMode.Create);
+            bf.Serialize(fs, itemList);
+            fs.Close();
+
+            Console.Clear();
+            Console.WriteLine("해당 데이터를 저장했습니다.\n");
+            Console.WriteLine("0. 나가기");
+
+            int input = CheckValidInput(0, 0);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+            }
+        }
+
+
+
+
+
+
+
+
+        static string ShowDifferenceAtkResult()
+        {
+            string result = "";
+            float abstractAtk = player.Atk - firstPlayerAtk;
+            if (abstractAtk != 0)
+            {
+                if (abstractAtk > 0)
+                    result = " (+" + abstractAtk.ToString() + ")";
+                else
+                    result = " (-" + (Math.Abs(player.Atk - firstPlayerAtk)).ToString() + ")";
+
+            }
+            return result;
+        }
+
+
+        static string ShowDifferenceDefResult()
+        {
+            string result = "";
+            int abstractDef = player.Def - firstPlayerDef;
+            if (abstractDef != 0)
+            {
+                if (abstractDef > 0)
+                    result = " (+" + abstractDef.ToString() + ")";
+                else
+                    result = " (-" + (Math.Abs(abstractDef)).ToString() + ")";
+
+            }
+            return result;
+        }
+
 
 
         static int CheckValidInput(int min, int max)
