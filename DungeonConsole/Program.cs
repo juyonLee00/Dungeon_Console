@@ -114,6 +114,9 @@ namespace DungeonConsole
                 itemList = bf.Deserialize(fs) as List<Item>;
                 fs.Close();
 
+                firstPlayerAtk = 10 + (player.Level - 1) * (float)0.5;
+                firstPlayerDef = 5 + (player.Level - 1);
+
                 Console.Clear();
                 Console.WriteLine("저장된 데이터를 불러왔습니다! 게임을 시작해주세요.");
                 Console.WriteLine("0. 게임 시작\n");
