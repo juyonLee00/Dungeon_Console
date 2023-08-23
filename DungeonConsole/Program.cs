@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace DungeonConsole
 {
@@ -18,18 +19,94 @@ namespace DungeonConsole
 
         public static void Main(string[] args)
         {
-            GameDataSetting();
-            DisplayGameIntro();
+            DisplayGameStart();
+        }
+
+        static void DisplayGameStart()
+        {
+            Console.Clear();
+            Console.WriteLine("스파르타 던전\n\n\n");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine("1. 새 게임");
+            Console.WriteLine("2. 이전 데이터 불러오기");
+
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+            int input = CheckValidInput(0, 2);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameStart();
+                    break;
+                case 1:
+                    GameDataSetting();
+                    DisplayGameIntro();
+                    break;
+                case 2:
+                    LoadSaveData();
+                    break;
+            }
+
+        }
+
+        static void LoadSaveData()
+        {
+
+        }
+
+
+        static void DisplaySaveData()
+        {
+            //저장된 데이터 있는지 확인
+            string path = "/Users/juyon/Desktop/DungeonConsole/userData/";
+            DirectoryInfo di = new DirectoryInfo(path);
+            FileInfo[] files = new FileInfo[30];
+
+            try
+            {
+                files = di.GetFiles("*.*");
+            }
+            
+            catch(Exception e)
+            {
+                Console.WriteLine("세이브 데이터가 없습니다. 새 데이터를 만드시겠습니까?");
+                Console.WriteLine();
+            }
+            
+            finally
+            {
+                Console.WriteLine("[세이브 데이터]");
+
+                foreach (FileInfo file in files)
+                {
+                    Console.WriteLine(file.Name);
+                }
+            }
+
         }
 
         static void GameDataSetting()
         {
-            //player info setting
-            player = new Character("Chad", "전사", 1, 10, 5, 100, 1500, false, false);
+            PlayerDataSetting();
+            ItemDataSetting();
+        }
+
+        static void PlayerDataSetting()
+        {
+            Console.Clear();
+            Console.WriteLine("플레이어 데이터 설정\n\n");
+            Console.WriteLine("플레이어의 이름을 입력해주세요.");
+
+            string input = Console.ReadLine();
+
+            player = new Character(input, "전사", 1, 10, 5, 100, 1500, false, false);
             firstPlayerAtk = player.Atk;
             firstPlayerDef = player.Def;
+        }
 
-            //item info setting
+        static void ItemDataSetting()
+        {
             itemList.Add(new Item("무쇠갑옷", false, 'd', 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 500, true));
             itemList.Add(new Item("낡은 검", false, 'a', 2, "쉽게 볼 수 있는 낡은 검입니다.", 600, false));
             itemList.Add(new Item("나무 몽둥이", false, 'a', 3, "주위에서 많이 보이는 몽둥이입니다.", 100, true));
