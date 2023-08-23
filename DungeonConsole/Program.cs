@@ -31,7 +31,6 @@ namespace DungeonConsole
             Console.WriteLine("0. 나가기");
             Console.WriteLine("1. 새 게임");
             Console.WriteLine("2. 이전 데이터 불러오기");
-
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
@@ -267,7 +266,17 @@ namespace DungeonConsole
             bf.Serialize(fs, itemList);
             fs.Close();
 
+            Console.Clear();
+            Console.WriteLine("해당 데이터를 저장했습니다.\n");
+            Console.WriteLine("0. 나가기");
 
+            int input = CheckValidInput(0, 0);
+            switch(input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+            }
         }
 
         static void DisplayRest()
