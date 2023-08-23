@@ -54,29 +54,51 @@ namespace DungeonConsole
 
         static void LoadSaveData()
         {
+            Console.Clear();
             DirectoryInfo di = new DirectoryInfo(path);
-            FileInfo[] files = new FileInfo[30];
+            FileInfo[] files = di.GetFiles("*.txt");
 
-            try
+            if (files.Length == 0)
             {
-                files = di.GetFiles("*.*");
-            }
+                Console.WriteLine("저장된 데이터가 없습니다.\n\n");
+                Console.WriteLine("0. 나가기");
 
-            catch (Exception e)
-            {
-                Console.WriteLine("세이브 데이터가 없습니다. 새 데이터를 만드시겠습니까?");
                 Console.WriteLine();
+                Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+                int input = CheckValidInput(0, 0);
+                switch (input)
+                {
+                    case 0:
+                        DisplayGameStart();
+                        break;
+                }
+
             }
 
-            finally
+            else
             {
                 Console.WriteLine("[세이브 데이터]");
 
-                foreach (FileInfo file in files)
+                
+                for(int i=0; i < files.Length; i++)
                 {
-                    Console.WriteLine(file.Name);
+                    Console.Write(i + 1);
+                    Console.WriteLine(". " + files[i].Name);
                 }
+                Console.WriteLine("\n불러올 데이터를 선택해주세요.");
+                int input = CheckValidInput(1, files.Length + 1);
+
+                BinaryFormatter bf = new BinaryFormatter();
+
+                FileStream fs = new FileStream(path + files[input - 1].Name, FileMode.Open);
+
+                player = bf.Deserialize(fs) as Character;
+                fs.Close();
+
+                DisplayGameIntro();
             }
+            
         }
 
 
@@ -189,7 +211,7 @@ namespace DungeonConsole
         static void SaveUserData()
         {
             string userStatusName = player.Name + ".txt";
-            string userItemName = player.Name + "Item.txt";
+            string userItemName = player.Name + "_Item.txt";
 
             string userStatusDataPath = path + userStatusName;
             string userItemDataPath = path + userItemName;
