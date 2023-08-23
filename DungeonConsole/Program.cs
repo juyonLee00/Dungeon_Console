@@ -19,10 +19,12 @@ namespace DungeonConsole
         static bool changeDef = false;
         static int DGclearNum = 0;
 
+
         public static void Main(string[] args)
         {
             DisplayGameStart();
         }
+
 
         static void DisplayGameStart()
         {
@@ -51,6 +53,8 @@ namespace DungeonConsole
 
         }
 
+
+        //저장된 데이터를 가져오는 함수
         static void LoadSaveData()
         {
             Console.Clear();
@@ -135,6 +139,7 @@ namespace DungeonConsole
 
 
 
+        //초기 데이터 세팅
         static void GameDataSetting()
         {
             PlayerDataSetting();
@@ -167,6 +172,7 @@ namespace DungeonConsole
 
 
 
+        //게임 시작 화면
         static void DisplayGameIntro()
         {
             Console.Clear();
@@ -192,12 +198,18 @@ namespace DungeonConsole
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("6. 저장");
             Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine("0. 처음 화면으로 이동");
+            Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-            int input = CheckValidInput(1, 6);
+            int input = CheckValidInput(0, 6);
             switch (input)
             {
+                case 0:
+                    DisplayGameStart();
+                    break;
                 case 1:
                     DisplayMyInfo();
                     break;
