@@ -27,7 +27,7 @@ namespace DungeonConsole
         static void DisplayGameStart()
         {
             Console.Clear();
-            Console.WriteLine("스파르타 던전\n\n\n");
+            Console.WriteLine("스파르타 던전\n\n");
             Console.WriteLine("0. 나가기");
             Console.WriteLine("1. 새 게임");
             Console.WriteLine("2. 이전 데이터 불러오기");
@@ -78,6 +78,7 @@ namespace DungeonConsole
 
             else
             {
+                Console.Clear();
                 Console.WriteLine("[세이브 데이터]");
 
                 
@@ -271,6 +272,7 @@ namespace DungeonConsole
 
         static void DisplayRest()
         {
+            Console.Clear();
             Console.WriteLine("휴식하기");
             Console.WriteLine("500 G 를 내면 체력을 회복할 수 있습니다. (보유 골드 : " + player.Gold + " G");
 
@@ -319,6 +321,7 @@ namespace DungeonConsole
 
         static void DisplayDungeon()
         {
+            Console.Clear();
             Console.WriteLine("던전입장");
             Console.WriteLine("이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.");
             Console.WriteLine();
@@ -343,8 +346,7 @@ namespace DungeonConsole
 
         static void EntryDungeon(int level)
         {
-
-            //권장 방어력보다 낮다면
+            Console.Clear();
             int recommendedDef = 5 + 6 * (level - 1);
             if (player.Def < recommendedDef)
             {
@@ -362,7 +364,6 @@ namespace DungeonConsole
                 }
             }
 
-            //권장 방어력보다 높거나 같다면
             else
             {
                 ClearDungeon(level);
@@ -463,6 +464,7 @@ namespace DungeonConsole
 
         static void DisplayMarket()
         {
+            Console.Clear();
             Console.WriteLine("상점");
             Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
 
@@ -551,6 +553,7 @@ namespace DungeonConsole
 
         static void PurchaseItem()
         {
+            Console.Clear();
             Console.WriteLine("상점");
             Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
 
@@ -787,7 +790,6 @@ namespace DungeonConsole
         }
     
 
-        //아이템 장착 여부에 따른 playerDisplay창 변경
         static string ShowDifferenceAtkResult()
         {
             string result = "";
@@ -821,6 +823,7 @@ namespace DungeonConsole
 
         static void ManageEquipItem()
         {
+            Console.Clear();
             Console.WriteLine("[아이템 목록]");
 
             int itemNum = 0;
@@ -879,7 +882,6 @@ namespace DungeonConsole
             int input = CheckValidInput(1, itemNum);
 
 
-            //장착하지 않은 아이템을 장착할 경우
             int inputItemIdx = itemListPair[input];
             if (!itemList[inputItemIdx].IsEquip)
             {
@@ -887,7 +889,6 @@ namespace DungeonConsole
 
                 if(inputItemType == 'a')
                 {
-                    //이미 어택형 아이템 장착할 경우 
                     if(player.IsEquipAtkItem)
                     {
                         int EquipAtkItemIdx = 0;
@@ -908,7 +909,6 @@ namespace DungeonConsole
                         player.Atk += itemList[inputItemIdx].TypeEffect;
                     }
 
-                    //어택형 아이템을 장착하고 있지 않을 경우
                     else
                     {
                         player.IsEquipAtkItem = true;
@@ -919,7 +919,6 @@ namespace DungeonConsole
 
                 else
                 {
-                    //디펜스형 아이템을 장착한 경우 
                     if(player.IsEquipDefItem)
                     {
                         int EquipDefItemIdx = 0;
@@ -939,7 +938,6 @@ namespace DungeonConsole
                         itemList[inputItemIdx].IsEquip = true;
                         player.Def += itemList[inputItemIdx].TypeEffect;
                     }
-                    //디펜스형 아이템을 장착하지 않은 경
                     else
                     {
                         player.IsEquipDefItem = true;
@@ -949,7 +947,7 @@ namespace DungeonConsole
                 }
 
             }
-            //장착한 아이템을 장착하지 않을 경우 
+
             else
             {
                 itemList[inputItemIdx].IsEquip = false;
