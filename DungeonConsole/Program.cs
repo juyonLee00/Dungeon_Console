@@ -52,13 +52,6 @@ namespace DungeonConsole
 
         static void LoadSaveData()
         {
-
-        }
-
-
-        static void DisplaySaveData()
-        {
-            //저장된 데이터 있는지 확인
             string path = "/Users/juyon/Desktop/DungeonConsole/userData/";
             DirectoryInfo di = new DirectoryInfo(path);
             FileInfo[] files = new FileInfo[30];
@@ -67,13 +60,13 @@ namespace DungeonConsole
             {
                 files = di.GetFiles("*.*");
             }
-            
-            catch(Exception e)
+
+            catch (Exception e)
             {
                 Console.WriteLine("세이브 데이터가 없습니다. 새 데이터를 만드시겠습니까?");
                 Console.WriteLine();
             }
-            
+
             finally
             {
                 Console.WriteLine("[세이브 데이터]");
@@ -83,8 +76,9 @@ namespace DungeonConsole
                     Console.WriteLine(file.Name);
                 }
             }
-
         }
+
+
 
         static void GameDataSetting()
         {
@@ -116,6 +110,8 @@ namespace DungeonConsole
             itemList.Add(new Item("스파르타의 창", false, 'a', 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", 3000, false));
         }
 
+
+
         static void DisplayGameIntro()
         {
             Console.Clear();
@@ -138,10 +134,13 @@ namespace DungeonConsole
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("5. 휴식");
             Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("6. 저장");
+            Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-            int input = CheckValidInput(1, 5);
+            int input = CheckValidInput(1, 6);
             switch (input)
             {
                 case 1:
@@ -159,7 +158,36 @@ namespace DungeonConsole
                 case 5:
                     DisplayRest();
                     break;
+                case 6:
+                    DisplayCheckSaveData();
+                    break;
             }
+        }
+
+        static void DisplayCheckSaveData()
+        {
+            Console.Clear();
+            Console.WriteLine("현재 데이터를 저장하시겠습니까?\n\n");
+            Console.WriteLine("0. 저장 안 함");
+            Console.WriteLine("1. 저장");
+
+            Console.WriteLine("\n선택지를 입력해주세요");
+
+            int input = CheckValidInput(0, 1);
+            switch(input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                case 1:
+                    SaveUserData();
+                    break;
+            }
+        }
+
+        static void SaveUserData()
+        {
+
         }
 
         static void DisplayRest()
