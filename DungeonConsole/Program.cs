@@ -96,7 +96,18 @@ namespace DungeonConsole
                 player = bf.Deserialize(fs) as Character;
                 fs.Close();
 
-                DisplayGameIntro();
+                Console.Clear();
+                Console.WriteLine("저장된 데이터를 불러왔습니다! 게임을 시작해주세요.");
+                Console.WriteLine("0. 게임 시작\n");
+
+                input = CheckValidInput(0, 0);
+                switch(input)
+                {
+                    case 0:
+                        DisplayGameIntro();
+                        break;
+                }
+
             }
             
         }
